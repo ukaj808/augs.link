@@ -21,7 +21,8 @@ const generateResponse = async (path: string, status: number, contentType: strin
 const handle = (req: Request, connInfo: ConnInfo): Promise<Response> => {
     const requestUrl = new URL(req.url);
     const { hostname, port } = getRemoteAddress(connInfo);
-
+    console.log(hostname);
+    console.log(port);
     if (req.method === "GET") {
         // Index Content
         if (requestUrl.pathname === "/") {
