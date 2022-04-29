@@ -1,8 +1,16 @@
-import {serve} from "https://deno.land/std@0.136.0/http/server.ts";
+import {ConnInfo, serve} from "https://deno.land/std@0.136.0/http/server.ts";
 import {fromFileUrl} from "https://deno.land/std@0.136.0/path/mod.ts";
 import {readableStreamFromReader} from "https://deno.land/std@0.136.0/streams/conversion.ts";
+import {assert} from "https://deno.land/std@0.136.0/_util/assert.ts";
 
-async function generateResponse(path: string, status: number, contentType: string): Promise<Response> {
+const instanceOfNetAddress = (address: Deno.Addr): address is Deno.NetAddr =>  'hostname' in address;
+
+const getRemoteAddress = (connInfo: ConnInfo): Deno.NetAddr => {
+    assert(instanceOfNetAddress(connInfo.remoteAddr), `Invalid connection type: ${typeof connInfo.remoteAddr}`);
+    return connInfo.remoteAddr;
+}
+
+const generateResponse = async (path: string, status: number, contentType: string): Promise<Response> => {
     const file = await Deno.open(fromFileUrl(new URL(path, import.meta.url)));
     return new Response(readableStreamFromReader(file), {
         status: status,
@@ -10,8 +18,9 @@ async function generateResponse(path: string, status: number, contentType: strin
     });
 }
 
-function handle(req: Request): Promise<Response> {
+const handle = (req: Request, connInfo: ConnInfo): Promise<Response> => {
     const requestUrl = new URL(req.url);
+    const { hostname, port } = getRemoteAddress(connInfo);
 
     if (req.method === "GET") {
         // Index Content
