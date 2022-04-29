@@ -2,6 +2,9 @@ import {ConnInfo, serve} from "https://deno.land/std@0.136.0/http/server.ts";
 import {fromFileUrl} from "https://deno.land/std@0.136.0/path/mod.ts";
 import {readableStreamFromReader} from "https://deno.land/std@0.136.0/streams/conversion.ts";
 import {assert} from "https://deno.land/std@0.136.0/_util/assert.ts";
+import {createRoom, Room} from "./interfaces/room.ts";
+import {createUser, User} from "./interfaces/user.ts";
+import {createUserAddress} from "./interfaces/user_address.ts";
 
 const instanceOfNetAddress = (address: Deno.Addr): address is Deno.NetAddr =>  'hostname' in address;
 
@@ -18,11 +21,12 @@ const generateResponse = async (path: string, status: number, contentType: strin
     });
 }
 
-const handle = (req: Request, connInfo: ConnInfo): Promise<Response> => {
+const handle = async (req: Request, connInfo: ConnInfo): Promise<Response> => {
     const requestUrl = new URL(req.url);
-    const { hostname, port } = getRemoteAddress(connInfo);
+    const {hostname, port} = getRemoteAddress(connInfo);
     console.log(hostname);
     console.log(port);
+
     if (req.method === "GET") {
         // Index Content
         if (requestUrl.pathname === "/") {
@@ -34,7 +38,9 @@ const handle = (req: Request, connInfo: ConnInfo): Promise<Response> => {
         }
 
         // Room Content
-        else if (requestUrl.pathname === "/pages/room/javascript/room.js") {
+        else if (requestUrl.pathname === "/pages/room/html/room.html") {
+            return generateResponse("./pages/room/html/room.html", 200, "text/html");
+        } else if (requestUrl.pathname === "/pages/room/javascript/room.js") {
             return generateResponse("./pages/room/javascript/room.js", 200, "application/javascript");
         } else if (requestUrl.pathname === "/pages/room/css/room.css") {
             return generateResponse("./pages/room/css/room.css", 200, "text/css");
@@ -59,7 +65,11 @@ const handle = (req: Request, connInfo: ConnInfo): Promise<Response> => {
     } else if (req.method === "POST") {
         // Create room + navigate to room page
         if (requestUrl.pathname === "/create-room") {
-            return generateResponse("./pages/room/html/room.html", 201, "text/html");
+            let room: Room = await createRoom(createUser(createUserAddress(hostname, port)));
+            return new Response("Creating a room...", {
+                status: 303,
+                headers: {"content-type": "text/plain", "location": "/pages/room/html/room.html"},
+            });
         }
     }
 
