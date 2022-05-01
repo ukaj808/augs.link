@@ -4,7 +4,7 @@ import {generateResponse, getRemoteAddress} from "./interfaces/http_util.ts";
 import {createUser} from "./interfaces/user.ts";
 
 const getRoomPathPattern: URLPattern = new URLPattern({ pathname: "/:id" });
-const roomWsConnectPattern: URLPattern = new URLPattern({ pathname: "/:id/ws" });
+const roomWsConnectPattern: URLPattern = new URLPattern({ pathname: "/:id/wss" });
 
 const rooms: Map<string, Room> = new Map<string, Room>();
 

@@ -19,7 +19,7 @@ console.log(roomId);
 const connect = () => {
     let ws;
     if (ws) ws.close();
-    ws = new WebSocket(`ws://${location.host}/${roomId}/ws`);
+    ws = new WebSocket(`wss://${location.host}/${roomId}/wss`);
     ws.addEventListener("open", () => {
         console.log("open", ws);
     });
