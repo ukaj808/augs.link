@@ -13,7 +13,20 @@ customElements.define('drop-section', DropSection);
 import {QueueSection} from "./web-components/sections/queue_section.js";
 customElements.define('queue-section', QueueSection);
 
+const roomId = location.pathname.substr(1);
+console.log(roomId);
 
+const connect = () => {
+    let ws;
+    if (ws) ws.close();
+    ws = new WebSocket(`ws://${location.host}/${roomId}/ws`);
+    ws.addEventListener("open", () => {
+        console.log("open", ws);
+    });
+    ws.addEventListener("close", () => {
+        console.log("close", ws);
+    });
+};
 
-
+connect();
 

@@ -10,20 +10,26 @@ export interface Room {
     currentSong: Song | null;
 }
 
-export const createRoom = async (creator: User): Promise<Room> => {
+export const createRoom = (): Room => {
     return {
         id: crypto.randomUUID(),
-        order: [creator.id],
+        order: [],
         vote: {
             numVotedForSkip: 0
         },
         currentSong: null,
-        connectedUsers: [creator]
+        connectedUsers: []
     }
 }
 
 
-export const connectUserToRoom = (user: User, room: Room): string => {
+export const joinRoom = (user: User, room: Room): string => {
+    room.order.push(user.id);
+    room.connectedUsers.push(user);
+    return "connected!";
+};
+
+export const leaveRoom = (user: User, room: Room): string => {
     room.order.push(user.id);
     room.connectedUsers.push(user);
     return "connected!";

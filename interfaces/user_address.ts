@@ -1,13 +1,19 @@
-import {User} from "./user.ts";
-
 export interface UserAddress {
     hostname: string;
     port: number;
+    socket: WebSocket;
 }
 
-export const createUserAddress = (hostname: string, port: number): UserAddress => {
+export interface UserAddressOptions {
+    hostname: string;
+    port: number;
+    socket: WebSocket;
+}
+
+export const createUserAddress = (options: UserAddressOptions): UserAddress => {
     return {
-        hostname,
-        port
+        hostname: options.hostname,
+        port: options.port,
+        socket: options.socket
     }
 }
