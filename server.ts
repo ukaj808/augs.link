@@ -5,6 +5,7 @@ import {RoomManager} from "./room_manager.ts";
 
 const profile = Deno.env.get("HOME");
 const wsProtocol =  (profile != null && profile === "prod") ? "wss" : "ws";
+console.log(wsProtocol);
 
 const getRoomPathPattern: URLPattern = new URLPattern({ pathname: "/:id" });
 const roomWsConnectPattern: URLPattern = new URLPattern({ pathname: `/:id/${wsProtocol}` });
