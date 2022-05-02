@@ -12,7 +12,7 @@ const roomWsConnectPattern: URLPattern = new URLPattern({ pathname: `/:id/${wsPr
 
 const roomManager: RoomManager = new RoomManager();
 
-const handle = async (req: Request, connInfo: ConnInfo): Promise<Response> => {
+const handle = (req: Request, connInfo: ConnInfo): Promise<Response> => {
     const requestUrl = new URL(req.url);
 
     if (req.method === "GET") {
@@ -72,7 +72,7 @@ const handle = async (req: Request, connInfo: ConnInfo): Promise<Response> => {
                 }
             });
 
-            return response;
+            return Promise.resolve(response);
         }
 
         // No Content Found...
@@ -82,10 +82,10 @@ const handle = async (req: Request, connInfo: ConnInfo): Promise<Response> => {
         // Create room + navigate to room page
         if (requestUrl.pathname === "/create-room") {
             const roomId: string = roomManager.createRoom();
-            return new Response("Creating a room...", {
+            return Promise.resolve(new Response("Creating a room...", {
                 status: 303,
                 headers: {"content-type": "text/plain", "location": `/${roomId}`},
-            });
+            }));
         }
     }
 
