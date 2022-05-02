@@ -9,28 +9,3 @@ export interface Room {
     connectedUsers: User[];
     currentSong: Song | null;
 }
-
-export const createRoom = (): Room => {
-    return {
-        id: crypto.randomUUID(),
-        order: [],
-        vote: {
-            numVotedForSkip: 0
-        },
-        currentSong: null,
-        connectedUsers: []
-    }
-}
-
-
-export const joinRoom = (user: User, room: Room): string => {
-    room.order.push(user.id);
-    room.connectedUsers.push(user);
-    return "connected!";
-};
-
-export const leaveRoom = (user: User, room: Room): string => {
-    room.order.push(user.id);
-    room.connectedUsers.push(user);
-    return "connected!";
-};

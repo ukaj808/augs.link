@@ -13,7 +13,6 @@ export interface User {
 export interface UserOptions {
     onJoin(): void;
     onLeave(): void;
-    onMessage(): void;
 }
 
 export const createUser = (req: Request, connInfo: ConnInfo, options: UserOptions): { user: User, response: Response } => {
@@ -21,7 +20,6 @@ export const createUser = (req: Request, connInfo: ConnInfo, options: UserOption
     const { response, socket } = Deno.upgradeWebSocket(req);
 
     socket.onopen = options.onJoin;
-    socket.onmessage = options.onMessage;
     socket.onclose = options.onLeave;
 
     return {
