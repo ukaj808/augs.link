@@ -68,6 +68,7 @@ const handle = (req: Request, connInfo: ConnInfo): Promise<Response> => {
                 },
                 onLeave() {
                     roomManager.leaveRoom(roomId, user);
+                    if (roomManager.isRoomEmpty(roomId)) roomManager.closeRoom(roomId);
                     console.log(`${user.id} left room ${roomId}`)
                 }
             });

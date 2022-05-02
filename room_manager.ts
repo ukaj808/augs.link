@@ -61,5 +61,9 @@ export class RoomManager {
         return this.rooms.has(roomId);
     }
 
+    public isRoomEmpty(roomId: string): boolean {
+        return this.rooms.get(roomId)?.connectedUsers.length == 0;
+    }
+
 }
 
