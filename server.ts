@@ -39,16 +39,50 @@ const handle = (req: Request, connInfo: ConnInfo): Promise<Response> => {
         }
 
         // Web Component Sections used in Room
-        else if (requestUrl.pathname === "/pages/room/javascript/web-components/sections/current_section.js") {
-            return generateResponse("./pages/room/javascript/web-components/sections/current_section.js", 200, "application/javascript");
-        } else if (requestUrl.pathname === "/pages/room/javascript/web-components/sections/democracy_section.js") {
-            return generateResponse("./pages/room/javascript/web-components/sections/democracy_section.js", 200, "application/javascript");
-        } else if (requestUrl.pathname === "/pages/room/javascript/web-components/sections/drop_section.js") {
-            return generateResponse("./pages/room/javascript/web-components/sections/drop_section.js", 200, "application/javascript");
-        } else if (requestUrl.pathname === "/pages/room/javascript/web-components/sections/order_section.js") {
-            return generateResponse("./pages/room/javascript/web-components/sections/order_section.js", 200, "application/javascript");
-        } else if (requestUrl.pathname === "/pages/room/javascript/web-components/sections/queue_section.js") {
-            return generateResponse("./pages/room/javascript/web-components/sections/queue_section.js", 200, "application/javascript");
+
+        // Current Section Web Component
+        else if (requestUrl.pathname === "/web-components/current/javascript/current_section.js") {
+            return generateResponse("./web-components/current/javascript/current_section.js", 200, "application/javascript");
+        } else if (requestUrl.pathname === "/web-components/current/html/current_section.html") {
+            return generateResponse("./web-components/current/html/current_section.html", 200, "text/html");
+        } else if (requestUrl.pathname === "/web-components/current/css/current_section.css") {
+            return generateResponse("./web-components/current/css/current_section.css", 200, "text/css");
+        }
+
+        // Democracy Section Web Component
+        else if (requestUrl.pathname === "/web-components/democracy/javascript/democracy_section.js") {
+            return generateResponse("./web-components/democracy/javascript/democracy_section.js", 200, "application/javascript");
+        } else if (requestUrl.pathname === "/web-components/democracy/html/democracy_section.html") {
+            return generateResponse("./web-components/democracy/html/democracy_section.html", 200, "text/html");
+        } else if (requestUrl.pathname === "/web-components/democracy/css/democracy_section.css") {
+            return generateResponse("./web-components/democracy/css/democracy_section.css", 200, "text/css");
+        }
+
+        // Drop Section Web Component
+        else if (requestUrl.pathname === "/web-components/drop/javascript/drop_section.js") {
+            return generateResponse("./web-components/drop/javascript/drop_section.js", 200, "application/javascript");
+        } else if (requestUrl.pathname === "/web-components/drop/html/drop_section.html") {
+            return generateResponse("./web-components/drop/html/drop_section.html", 200, "text/html");
+        } else if (requestUrl.pathname === "/web-components/drop/css/drop_section.css") {
+            return generateResponse("./web-components/drop/css/drop_section.css", 200, "text/css");
+        }
+
+        // Order Section Web Component
+        else if (requestUrl.pathname === "/web-components/order/javascript/order_section.js") {
+            return generateResponse("./web-components/order/javascript/order_section.js", 200, "application/javascript");
+        } else if (requestUrl.pathname === "/web-components/order/html/order_section.html") {
+            return generateResponse("./web-components/order/html/order_section.html", 200, "text/html");
+        } else if (requestUrl.pathname === "/web-components/order/css/order_section.css") {
+            return generateResponse("./web-components/order/css/order_section.css", 200, "text/css");
+        }
+
+        // Queue Section Web Component
+        else if (requestUrl.pathname === "/web-components/queue/javascript/queue_section.js") {
+            return generateResponse("./web-components/queue/javascript/queue_section.js", 200, "application/javascript");
+        } else if (requestUrl.pathname === "/web-components/queue/html/queue_section.html") {
+            return generateResponse("./web-components/queue/html/queue_section.html", 200, "text/html");
+        } else if (requestUrl.pathname === "/web-components/queue/css/queue_section.css") {
+            return generateResponse("./web-components/queue/css/queue_section.css", 200, "text/css");
         }
 
         // Web Socket connection request
