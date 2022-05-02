@@ -3,7 +3,7 @@ import {generateResponse} from "./interfaces/http_util.ts";
 import {createUser} from "./interfaces/user.ts";
 import {RoomManager} from "./room_manager.ts";
 
-const profile = Deno.env.get("HOME");
+const profile = Deno.env.get("profile");
 const wsProtocol =  (profile != null && profile === "prod") ? "wss" : "ws";
 console.log(wsProtocol);
 
