@@ -12,7 +12,7 @@ export class RoomManager {
 
     public publish(roomId: string, event: RoomEvent): void {
         if (!this.doesRoomExist(roomId)) throw new Error("Room doesn't exist");
-        this.rooms.get(roomId).connectedUsers.forEach(user => user.address.socket.send(JSON.stringify(event)));
+        this.rooms.get(roomId)?.connectedUsers.forEach(user => user.address.socket.send(JSON.stringify(event)));
     }
 
     public createRoom(): string {
