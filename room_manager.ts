@@ -1,5 +1,6 @@
 import {Room} from "./interfaces/room.ts";
 import {User} from "./interfaces/user.ts";
+import {RoomEvent} from "./interfaces/room_events.ts";
 
 export class RoomManager {
 
@@ -7,6 +8,11 @@ export class RoomManager {
 
     constructor() {
         this.rooms = new Map<string, Room>();
+    }
+
+    public publish(roomId: string, event: RoomEvent): void {
+        if (!this.doesRoomExist(roomId)) throw new Error("Room doesn't exist");
+        this.rooms.get(roomId).connectedUsers.forEach(user => user.address.socket.send(JSON.stringify(event)));
     }
 
     public createRoom(): string {

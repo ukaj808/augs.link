@@ -1,3 +1,28 @@
-h1 {
-    color: green;
+.user-order-list {
+    list-style: none;
+    width: 95%;
+    height: 95%;
+    overflow: auto;
+}
+
+.user-order-list__user {
+    width: 95%;
+    height: 10%;
+    background-color: var(--tertiary-bg-color);
+    /* For spacing between users */
+    margin-top: 10px;
+
+    display: flex;
+    /* This is "magically" making the image fit in the div and maintaining its ratio as it resizes */
+    justify-content: space-between;
+
+    font-size: 30px;
+}
+
+.user-order-list__order-lbl {
+    align-self: center;
+}
+
+.user-order-list__username-lbl {
+    align-self: center;
 }

@@ -1,6 +1,6 @@
 import {ConnInfo, serve} from "https://deno.land/std@0.136.0/http/server.ts";
 import {generateResponse} from "./interfaces/http_util.ts";
-import {createUser} from "./interfaces/user.ts";
+import {createUser, sendUserInitialConnectionDetails, User, UserJoinMessage} from "./interfaces/user.ts";
 import {RoomManager} from "./room_manager.ts";
 
 const profile = Deno.env.get("profile");
@@ -85,6 +85,10 @@ const handle = (req: Request, connInfo: ConnInfo): Promise<Response> => {
             return generateResponse("./web-components/queue/css/queue_section.css", 200, "text/css");
         }
 
+        else if (requestUrl.pathname === "/images/sample_icon.jpg") {
+            return generateResponse("./images/sample_icon.jpg", 200, "image/jpeg");
+        }
+
         // Web Socket connection request
         //todo: when coming from a room?
         else if (roomWsConnectPattern.test(req.url)) {
@@ -98,6 +102,9 @@ const handle = (req: Request, connInfo: ConnInfo): Promise<Response> => {
             const { user, response } = createUser(req, connInfo, {
                 onJoin() {
                     roomManager.joinRoom(roomId, user);
+                    roomManager.publish(roomId, {
+
+                    })
                     console.log(`${user.id} joined room ${roomId}`);
                 },
                 onLeave() {

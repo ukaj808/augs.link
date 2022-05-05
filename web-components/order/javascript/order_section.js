@@ -9,6 +9,14 @@ export const define = (html) => {
             const shadow = this.attachShadow({mode: 'open'});
             shadow.innerHTML = html;
         }
+
+        onUserJoin() {
+
+        }
+
+        onUserLeave() {
+
+        }
     }
     customElements.define('order-section', OrderSection);
 }
