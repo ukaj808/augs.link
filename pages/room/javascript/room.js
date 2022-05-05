@@ -13,18 +13,18 @@ const createAndPublishUserJoinEvent = () => publishRoomEvent(createUserJoinEvent
 const createAndPublishUserLeftEvent = () => publishRoomEvent(createUserLeftEvent());
 const initUserId = (str) => userId = str;
 const initUsername = (str) => username = str;
-const handleFirstUserConnectedEvent = (data) => {
-    initUserId(data?.userId);
-    initUsername(data?.username);
+const handleFirstUserConnectedEvent = (eventData) => {
+    initUserId(eventData?.userId);
+    initUsername(eventData?.username);
     createAndPublishUserJoinEvent();
 }
 
 const roomEventHandler = ({data}) => {
-    let parsedMessage = JSON.parse(data);
+    let parsedData = JSON.parse(data);
 
-    switch (parsedMessage?.type) {
+    switch (parsedData?.type) {
         case "FirstUserConnectedEvent":
-            handleFirstUserConnectedEvent();
+            handleFirstUserConnectedEvent(parsedData);
             break;
         default:
             console.error("Unrecognized Event!");

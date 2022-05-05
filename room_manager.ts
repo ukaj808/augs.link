@@ -8,6 +8,7 @@ export class RoomManager {
 
     constructor() {
         this.rooms = new Map<string, Room>();
+
     }
 
     public publish(roomId: string, event: RoomEvent): void {
