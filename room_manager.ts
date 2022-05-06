@@ -1,6 +1,6 @@
 import {Room} from "./interfaces/room.ts";
 import {User} from "./interfaces/user.ts";
-import {RoomEvent} from "./interfaces/room_events.ts";
+import {RoomEvent, UserJoinEvent, UserLeftEvent} from "./interfaces/room_events.ts";
 
 export class RoomManager {
 
@@ -9,11 +9,6 @@ export class RoomManager {
     constructor() {
         this.rooms = new Map<string, Room>();
 
-    }
-
-    public publish(roomId: string, event: RoomEvent): void {
-        if (!this.doesRoomExist(roomId)) throw new Error("Room doesn't exist");
-        this.rooms.get(roomId)?.connectedUsers.forEach(user => user.address.socket.send(JSON.stringify(event)));
     }
 
     public createRoom(): string {
@@ -34,16 +29,19 @@ export class RoomManager {
         return roomId;
     }
 
-    public closeRoom(roomId: string): void {
-        if (!this.doesRoomExist(roomId)) throw new Error("Room doesn't exist");
-        this.rooms.delete(roomId);
-    }
-
     public joinRoom(roomId: string, user: User): void {
         if (!this.doesRoomExist(roomId)) throw new Error("Room doesn't exist");
-        const room = this.rooms.get(roomId);
+        const room = this.rooms.get(roomId) as Room;
         room?.order.push(user.id);
         room?.connectedUsers.push(user);
+        const userJoinEvent: UserJoinEvent = {
+            eventId: "123",
+            type: "UserJoinEvent",
+            userId: user.id,
+            username: user.username,
+            room,
+        }
+        this.publish(roomId, userJoinEvent);
     }
 
     public leaveRoom(roomId: string, user: User): void {
@@ -62,14 +60,32 @@ export class RoomManager {
             room?.connectedUsers.splice(userIndex, 1);
         }
 
+        const userLeftEvent: UserLeftEvent = {
+            eventId: "123",
+            type: "UserLeftEvent",
+            userId: user.id
+        }
+
+        if (this.isRoomEmpty(roomId)) this.closeRoom(roomId);
+        else this.publish(roomId, userLeftEvent);
     }
 
     public doesRoomExist(roomId: string): boolean {
         return this.rooms.has(roomId);
     }
 
-    public isRoomEmpty(roomId: string): boolean {
+    private isRoomEmpty(roomId: string): boolean {
         return this.rooms.get(roomId)?.connectedUsers.length == 0;
+    }
+
+    private publish(roomId: string, event: RoomEvent): void {
+        if (!this.doesRoomExist(roomId)) throw new Error("Room doesn't exist");
+        this.rooms.get(roomId)?.connectedUsers.forEach(user => user.address.socket.send(JSON.stringify(event)));
+    }
+
+    private closeRoom(roomId: string): void {
+        if (!this.doesRoomExist(roomId)) throw new Error("Room doesn't exist");
+        this.rooms.delete(roomId);
     }
 
 }

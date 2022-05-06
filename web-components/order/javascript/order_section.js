@@ -23,6 +23,7 @@ const define = (html) => {
     }
 
     const onUserJoin = ({detail}) => {
+        console.log({detail})
         shadow.querySelector("#user-order-list").appendChild(createNewUserListElement(detail));
     }
 

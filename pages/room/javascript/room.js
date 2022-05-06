@@ -14,7 +14,7 @@ const roomEventHandler = ({data}) => {
     let parsedData = JSON.parse(data);
 
     switch (parsedData?.type) {
-        case "FirstUserConnectedEvent":
+        case "UserJoinEvent":
             createAndPublishUserJoinEvent(parsedData);
             break;
         case "UserLeftEvent":
@@ -34,5 +34,9 @@ const connect = () => {
     ws.addEventListener("message", roomEventHandler);
 };
 
-connect();
+// Connect to web socket AFTER all the room modules have loaded (e.g. Order Section)
+// Each module adds event listeners to the room page (main)...
+// If the websocket connection happens before the event listeners are added in each module
+// then those modules won't know that they/or another user joined...
+window.addEventListener('load', connect)
 

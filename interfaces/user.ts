@@ -15,19 +15,12 @@ export interface UserOptions {
     onLeave(): void;
 }
 
-
-export const sendUserPrivateMessage = (user: User, message: string): void => user.address.socket.send(message);
-export const sendUserInitialConnectionDetails = (user: User): void =>
-    sendUserPrivateMessage(user, JSON.stringify({id: user.id, username: user.username}));
-
 export const createUser = (req: Request, connInfo: ConnInfo, options: UserOptions): { user: User, response: Response } => {
     const { hostname, port } = getRemoteAddress(connInfo);
     const { response, socket } = Deno.upgradeWebSocket(req);
     const userId: string = crypto.randomUUID();
 
     socket.onopen = options.onJoin;
-
-
     socket.onclose = options.onLeave;
 
     return {

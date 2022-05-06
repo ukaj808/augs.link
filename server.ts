@@ -2,7 +2,7 @@ import {ConnInfo, serve} from "https://deno.land/std@0.136.0/http/server.ts";
 import {generateResponse} from "./interfaces/http_util.ts";
 import {createUser} from "./interfaces/user.ts";
 import {RoomManager} from "./room_manager.ts";
-import {FirstUserConnectedEvent, UserLeftEvent} from "./interfaces/room_events.ts";
+import {UserJoinEvent, UserLeftEvent} from "./interfaces/room_events.ts";
 
 const profile = Deno.env.get("profile");
 const wsProtocol =  (profile != null && profile === "prod") ? "wss" : "ws";
@@ -101,26 +101,8 @@ const handle = (req: Request, connInfo: ConnInfo): Promise<Response> => {
             }
 
             const { user, response } = createUser(req, connInfo, {
-                onJoin() {
-                    const firstUserConnectedEvent: FirstUserConnectedEvent = {
-                        eventId: "123",
-                        type: "FirstUserConnectedEvent",
-                        userId: user.id,
-                        username: user.username
-                    }
-                    roomManager.joinRoom(roomId, user);
-                    roomManager.publish(roomId, firstUserConnectedEvent);
-                },
-                onLeave() {
-                    const userLeftEvent: UserLeftEvent = {
-                        eventId: "123",
-                        type: "UserLeftEvent",
-                        userId: user.id
-                    }
-                    roomManager.leaveRoom(roomId, user);
-                    roomManager.publish(roomId, userLeftEvent);
-                    if (roomManager.isRoomEmpty(roomId)) roomManager.closeRoom(roomId);
-                }
+                onJoin: () => roomManager.joinRoom(roomId, user),
+                onLeave: () => roomManager.leaveRoom(roomId, user)
             });
 
             return Promise.resolve(response);
