@@ -2,32 +2,32 @@ fetch("./web-components/order/html/order_section.html")
     .then(stream => stream.text())
     .then(text => define(text));
 
-export const define = (html) => {
+const define = (html) => {
     const roomElement = document.getElementById("room");
     let shadow;
 
     const createNewUserListElement = (userDetails) => {
-        let newUserElement = document.createElement("li");
-        let orderLabel = document.createElement("label");
-        let usernameLabel = document.createElement("label");
-        let icon = document.createElement("img");
+        const userTemplate = shadow.querySelector('#user-template');
+        const clone = userTemplate.content.cloneNode(true);
+        const listItemElement = clone.querySelector("li");
 
-        newUserElement.classList.add("user-order-list__user");
-        orderLabel.classList.add("user-order-list__order-lbl");
-        orderLabel.innerText = "1";
-        usernameLabel.classList.add("user-order-list__username-lbl");
-        usernameLabel.innerText = userDetails.username;
+        listItemElement.id = userDetails.userId;
 
-        icon.classList.add("user-order-list__icon");
-        icon.alt = `${userDetails.username} icon`;
-        icon.src = "./images/sample_icon.jpg";
+        const orderLabel = listItemElement.children[0];
+        const usernameLabel = listItemElement.children[1];
 
-        newUserElement.append(orderLabel, usernameLabel, icon);
-        return newUserElement;
+        orderLabel.textContent = "1";
+        usernameLabel.textContent = userDetails.username;
+
+        return clone;
     }
 
     const onUserJoin = ({detail}) => {
         shadow.querySelector("#user-order-list").appendChild(createNewUserListElement(detail));
+    }
+
+    const onUserLeft = ({detail}) => {
+        shadow.getElementById(detail.userId).remove();
     }
 
     class OrderSection extends HTMLElement {
@@ -40,10 +40,12 @@ export const define = (html) => {
         connectedCallback() {
             super.connectedCallback && super.connectedCallback();
             roomElement.addEventListener("user-join", onUserJoin);
+            roomElement.addEventListener("user-left", onUserLeft)
         }
 
         disconnectedCallback() {
             roomElement.removeEventListener("user-join", onUserJoin);
+            roomElement.addEventListener("user-left", onUserLeft)
             super.disconnectedCallback && super.disconnectedCallback();
         }
 

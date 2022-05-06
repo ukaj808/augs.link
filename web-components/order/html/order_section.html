@@ -1,4 +1,12 @@
 <link rel="stylesheet" href="./web-components/order/css/order_section.css">
 <ol id="user-order-list" class="user-order-list">
-   <!-- Insert user list items here -->
+   <!-- Insert template list item here -->
 </ol>
+
+<template id="user-template">
+   <li class="user-order-list__user">
+      <label class="user-order-list__order-lbl"></label>
+      <label class="user-order-list__username-lbl"></label>
+      <img class="user-order-list__icon" alt="User Icon" src="./images/sample_icon.jpg"/>
+   </li>
+</template>
