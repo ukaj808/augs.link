@@ -1,6 +1,7 @@
 import {Room} from "./interfaces/room.ts";
 import {User} from "./interfaces/user.ts";
 import {RoomEvent, UserJoinEvent, UserLeftEvent, UserWelcomeEvent} from "./interfaces/room_events.ts";
+import {stringify} from "./util.ts";
 
 export class RoomManager {
 
@@ -8,7 +9,6 @@ export class RoomManager {
 
     constructor() {
         this.rooms = new Map<string, Room>();
-
     }
 
     public createRoom(): string {
@@ -20,7 +20,7 @@ export class RoomManager {
                 numVotedForSkip: 0
             },
             currentSong: null,
-            connectedUsers: new Map()
+            connectedUsers: new Map<string, User>()
         }
 
         this.rooms.set(roomId, newRoom);
@@ -81,20 +81,20 @@ export class RoomManager {
 
     private publishAll(roomId: string, event: RoomEvent): void {
         if (!this.doesRoomExist(roomId)) throw new Error("Room doesn't exist");
-        this.rooms.get(roomId)?.connectedUsers.forEach(user => user.address.socket.send(JSON.stringify(event)));
+        this.rooms.get(roomId)?.connectedUsers.forEach(user => user.address.socket.send(stringify(event)));
     }
 
     private publishAllBut(roomId: string, event: RoomEvent, userId: string): void {
         if (!this.doesRoomExist(roomId)) throw new Error("Room doesn't exist");
         this.rooms.get(roomId)?.connectedUsers.forEach(((user, id) => {
-            if (userId !== id) user.address.socket.send(JSON.stringify(event))
+            if (userId !== id) user.address.socket.send(stringify(event))
         }));
     }
 
     private publishTo(roomId: string, event: RoomEvent, userId: string): void {
         if (!this.doesRoomExist(roomId)) throw new Error("Room doesn't exist");
         if (!this.isUserInRoom(roomId, userId)) throw new Error("User doesn't exist in this room");
-        this.rooms.get(roomId)?.connectedUsers.get(userId)?.address.socket.send(JSON.stringify(event));
+        this.rooms.get(roomId)?.connectedUsers.get(userId)?.address.socket.send(stringify(event));
     }
 
     private closeRoom(roomId: string): void {

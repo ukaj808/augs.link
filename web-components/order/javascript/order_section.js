@@ -16,8 +16,6 @@ const define = (html) => {
         const orderLabel = listItemElement.children[0];
         const usernameLabel = listItemElement.children[1];
 
-
-        
         orderLabel.textContent = "1";
         usernameLabel.textContent = userDetails.username;
 
@@ -25,12 +23,15 @@ const define = (html) => {
     }
 
     const onUserJoin = ({detail}) => {
-        console.log({detail})
         shadow.querySelector("#user-order-list").appendChild(createNewUserListElement(detail));
     }
 
     const onUserLeft = ({detail}) => {
         shadow.getElementById(detail.userId).remove();
+    }
+
+    const onUserWelcome = ({detail}) => {
+
     }
 
     class OrderSection extends HTMLElement {
@@ -43,12 +44,14 @@ const define = (html) => {
         connectedCallback() {
             super.connectedCallback && super.connectedCallback();
             roomElement.addEventListener("user-join", onUserJoin);
-            roomElement.addEventListener("user-left", onUserLeft)
+            roomElement.addEventListener("user-left", onUserLeft);
+            roomElement.addEventListener("user-welcome", onUserWelcome);
         }
 
         disconnectedCallback() {
             roomElement.removeEventListener("user-join", onUserJoin);
-            roomElement.addEventListener("user-left", onUserLeft)
+            roomElement.removeEventListener("user-left", onUserLeft)
+            roomElement.removeEventListener("user-welcome", onUserWelcome)
             super.disconnectedCallback && super.disconnectedCallback();
         }
 
