@@ -41,6 +41,7 @@ const define = (html) => {
     const onUserWelcome = ({detail}) => {
         const currentUsers = Array.from(detail.roomState.connectedUsers.values());
         shadow.querySelector("#user-order-list").appendChild(createWholeUserList(currentUsers));
+        console.log(detail);
     }
 
     class OrderSection extends HTMLElement {
