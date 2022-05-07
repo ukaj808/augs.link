@@ -4,8 +4,7 @@ import {Song} from "./song.ts";
 
 export interface Room {
     id: string;
-    order: string[];
     vote: Vote;
-    connectedUsers: User[];
+    connectedUsers: Map<string, User>;
     currentSong: Song | null;
 }

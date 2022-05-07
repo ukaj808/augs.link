@@ -5,10 +5,15 @@ export interface RoomEvent {
     type: string;
 }
 
+export interface UserWelcomeEvent extends RoomEvent {
+    userId: string;
+    username: string;
+    roomState: Room;
+}
+
 export interface UserJoinEvent extends RoomEvent{
     userId: string;
     username: string;
-    room: Room;
 }
 
 export interface UserLeftEvent extends RoomEvent{
