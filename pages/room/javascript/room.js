@@ -54,5 +54,6 @@ const connect = () => {
 // Each module adds event listeners to the room page (main)...
 // If the websocket connection happens before the event listeners are added in each module
 // then those modules won't know that they/or another user joined...
+// Still noticing this bug in prod!!
 window.addEventListener('load', connect)
 
