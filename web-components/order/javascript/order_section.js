@@ -22,6 +22,14 @@ const define = (html) => {
         return clone;
     }
 
+    const createWholeUserList = (users) => {
+        const fragment = new DocumentFragment();
+        users.forEach(user => {
+            fragment.appendChild(createNewUserListElement({userId: user.id, username: user.username}));
+        })
+        return fragment;
+    }
+
     const onUserJoin = ({detail}) => {
         shadow.querySelector("#user-order-list").appendChild(createNewUserListElement(detail));
     }
@@ -31,7 +39,8 @@ const define = (html) => {
     }
 
     const onUserWelcome = ({detail}) => {
-
+        const currentUsers = Array.from(detail.roomState.connectedUsers.values());
+        shadow.querySelector("#user-order-list").appendChild(createWholeUserList(currentUsers));
     }
 
     class OrderSection extends HTMLElement {
