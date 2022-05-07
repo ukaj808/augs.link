@@ -3,6 +3,7 @@
     width: 95%;
     height: 95%;
     overflow: auto;
+    counter-reset: user-order;
 }
 
 .user-order-list__user {
@@ -21,6 +22,11 @@
 
 .user-order-list__order-lbl {
     align-self: center;
+}
+
+.user-order-list__order-lbl::before {
+    counter-increment: user-order;
+    content: counter(user-order);
 }
 
 .user-order-list__username-lbl {

@@ -13,10 +13,8 @@ const define = (html) => {
 
         listItemElement.id = userDetails.userId;
 
-        const orderLabel = listItemElement.children[0];
         const usernameLabel = listItemElement.children[1];
 
-        orderLabel.textContent = "1";
         usernameLabel.textContent = userDetails.username;
 
         return clone;
