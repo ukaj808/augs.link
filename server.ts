@@ -86,8 +86,9 @@ const handle = (req: Request, connInfo: ConnInfo): Promise<Response> => {
             return generateResponse("./web-components/queue/css/queue_section.css", 200, "text/css");
         }
 
-        else if (requestUrl.pathname === "/images/sample_icon.jpg") {
-            return generateResponse("./images/sample_icon.jpg", 200, "image/jpeg");
+        // Images
+        else if (requestUrl.pathname === "/images/emo.jpg") {
+            return generateResponse("./images/emo.jpg", 200, "image/jpeg");
         }
 
         // Web Socket connection request

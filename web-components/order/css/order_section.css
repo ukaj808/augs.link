@@ -18,10 +18,13 @@
     justify-content: space-between;
 
     font-size: 30px;
+
+    border-radius: var(--section-border-radius);
 }
 
 .user-order-list__order-lbl {
     align-self: center;
+    padding-left: 10px;
 }
 
 .user-order-list__order-lbl::before {
@@ -31,4 +34,8 @@
 
 .user-order-list__username-lbl {
     align-self: center;
+}
+
+.user-order-list__icon {
+    border-radius: var(--section-border-radius);
 }

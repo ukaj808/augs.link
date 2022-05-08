@@ -1,29 +1,31 @@
 :root {
     font-family: 'Archivo', sans-serif;
-    --primary-bg-color: black;
+    --primary-bg-color: #202125;
     --primary-fnt-color: white;
-    --primary-btn-bg-color: black;
-    --secondary-bg-color: #464646;
-    --tertiary-bg-color: #86623e;
+    --primary-btn-bg-color: #89b3f7;
+    --secondary-bg-color: #303135;
+    --tertiary-bg-color: #404046;
 
     --section-border-radius: 10px;
+
 }
 
-body {
-    background-color: var(--primary-bg-color);
-    position: absolute;
-    width: 100%;
+html {
     height: 100%;
 }
 
+body {
+    height: 95%;
+    background-color: var(--primary-bg-color);
+}
+
 .room {
+    height: 100%;
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     grid-template-rows: repeat(2, 1fr);
     grid-gap: 10px;
     padding: 10px;
-    width: 100%;
-    height: 100%;
 }
 
 .order {
@@ -34,24 +36,30 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
+
+    border-radius: var(--section-border-radius);
 }
 
 .drop {
     background-color: var(--secondary-bg-color);
     color: var(--primary-fnt-color);
+    border-radius: var(--section-border-radius);
 }
 
 .queue {
     background-color: var(--secondary-bg-color);
     color: var(--primary-fnt-color);
+    border-radius: var(--section-border-radius);
 }
 
 .current {
     background-color: var(--secondary-bg-color);
     color: var(--primary-fnt-color);
+    border-radius: var(--section-border-radius);
 }
 
 .democracy {
     background-color: var(--secondary-bg-color);
     color: var(--primary-fnt-color);
+    border-radius: var(--section-border-radius);
 }
