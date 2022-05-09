@@ -15,7 +15,7 @@
 
     display: flex;
     /* This is "magically" making the image fit in the div and maintaining its ratio as it resizes */
-    justify-content: space-between;
+    justify-content: space-evenly;
 
     font-size: 30px;
 
@@ -34,8 +34,4 @@
 
 .user-order-list__username-lbl {
     align-self: center;
-}
-
-.user-order-list__icon {
-    border-radius: var(--section-border-radius);
 }

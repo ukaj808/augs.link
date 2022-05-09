@@ -2,6 +2,7 @@ import {createUserAddress, UserAddress} from "./user_address.ts";
 import {Song} from "./song.ts";
 import {getRemoteAddress} from "./http_util.ts";
 import {ConnInfo} from "https://deno.land/std@0.136.0/http/server.ts";
+import {generateRandomGamertag} from "../util.ts";
 
 export interface User {
     id: string;
@@ -19,6 +20,7 @@ export const createUser = (req: Request, connInfo: ConnInfo, options: UserOption
     const { hostname, port } = getRemoteAddress(connInfo);
     const { response, socket } = Deno.upgradeWebSocket(req);
     const userId: string = crypto.randomUUID();
+    const username: string = generateRandomGamertag();
 
     socket.onopen = options.onJoin;
     socket.onclose = options.onLeave;
@@ -32,7 +34,7 @@ export const createUser = (req: Request, connInfo: ConnInfo, options: UserOption
                 socket: socket
             }),
             queue: [],
-            username: userId
+            username: username
         },
         response
     }

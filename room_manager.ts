@@ -1,7 +1,7 @@
 import {Room} from "./interfaces/room.ts";
 import {User} from "./interfaces/user.ts";
 import {RoomEvent, UserJoinEvent, UserLeftEvent, UserWelcomeEvent} from "./interfaces/room_events.ts";
-import {stringify} from "./util.ts";
+import {generateId, stringify} from "./util.ts";
 
 export class RoomManager {
 
@@ -12,7 +12,7 @@ export class RoomManager {
     }
 
     public createRoom(): string {
-        const roomId: string = crypto.randomUUID();
+        const roomId: string = generateId(7);
 
         const newRoom: Room = {
             id: roomId,
