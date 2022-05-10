@@ -35,7 +35,7 @@ const handle = async (req: Request): Promise<Response> => {
                 return generateResponse("./pages/404/html/404.html", 404, "text/html");
             }
             try {
-                await getRoomFetch(roomId, {env: "local"});
+                await getRoomFetch(roomId, {env: getProfile()});
             } catch {
                 return generateResponse("./pages/404/html/404.html", 404, "text/html");
             }
