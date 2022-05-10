@@ -1,19 +1,20 @@
-import {ConnInfo, serve} from "https://deno.land/std@0.136.0/http/server.ts";
-import {generateResponse} from "./interfaces/http_util.ts";
-import {createUser} from "./interfaces/user.ts";
-import {RoomManager} from "./room_manager.ts";
-import {UserJoinEvent, UserLeftEvent} from "./interfaces/room_events.ts";
+import {serve} from "https://deno.land/std@0.136.0/http/server.ts";
+import {fromFileUrl} from "https://deno.land/std@0.136.0/path/mod.ts";
+import {readableStreamFromReader} from "https://deno.land/std@0.136.0/streams/conversion.ts";
+import {createRoomFetch, getRoomFetch} from "https://raw.githubusercontent.com/ukaj808/augslink-rooms/master/mod.ts";
+import { getProfile } from "https://raw.githubusercontent.com/ukaj808/augslink-lib/master/mod.ts";
 
-const profile = Deno.env.get("profile");
-const wsProtocol =  (profile != null && profile === "prod") ? "wss" : "ws";
-console.log(wsProtocol);
+export const getRoomPathPattern: URLPattern = new URLPattern({pathname: "/:id"});
 
-const getRoomPathPattern: URLPattern = new URLPattern({ pathname: "/:id" });
-const roomWsConnectPattern: URLPattern = new URLPattern({ pathname: `/:id/${wsProtocol}` });
+const generateResponse = async (path: string, status: number, contentType: string): Promise<Response> => {
+    const file = await Deno.open(fromFileUrl(new URL("./".concat(path), import.meta.url)));
+    return new Response(readableStreamFromReader(file), {
+        status: status,
+        headers: {"content-type": contentType,},
+    });
+}
 
-const roomManager: RoomManager = new RoomManager();
-
-const handle = (req: Request, connInfo: ConnInfo): Promise<Response> => {
+const handle = async (req: Request): Promise<Response> => {
     const requestUrl = new URL(req.url);
 
     if (req.method === "GET") {
@@ -27,9 +28,15 @@ const handle = (req: Request, connInfo: ConnInfo): Promise<Response> => {
         }
 
         // Room Content
+            // todo: handle 404 in room code? this is ugly
         else if (getRoomPathPattern.test(req.url)) {
             const roomId: string | undefined = getRoomPathPattern.exec(req.url)?.pathname.groups.id;
-            if (roomId == null || !roomManager.doesRoomExist(roomId)) {
+            if (roomId == null) {
+                return generateResponse("./pages/404/html/404.html", 404, "text/html");
+            }
+            try {
+                await getRoomFetch(roomId, {env: "local"});
+            } catch {
                 return generateResponse("./pages/404/html/404.html", 404, "text/html");
             }
             return generateResponse("./pages/room/html/room.html", 200, "text/html");
@@ -39,7 +46,7 @@ const handle = (req: Request, connInfo: ConnInfo): Promise<Response> => {
             return generateResponse("./pages/room/css/room.css", 200, "text/css");
         }
 
-        // Web Component Sections used in Room
+            // Web Component Sections used in Room
 
         // Current Section Web Component
         else if (requestUrl.pathname === "/web-components/current/javascript/current_section.js") {
@@ -86,36 +93,13 @@ const handle = (req: Request, connInfo: ConnInfo): Promise<Response> => {
             return generateResponse("./web-components/queue/css/queue_section.css", 200, "text/css");
         }
 
-        // Images
-        else if (requestUrl.pathname === "/images/emo.jpg") {
-            return generateResponse("./images/emo.jpg", 200, "image/jpeg");
-        }
-
-        // Web Socket connection request
-        //todo: when coming from a room?
-        else if (roomWsConnectPattern.test(req.url)) {
-
-            const roomId: string | undefined = roomWsConnectPattern.exec(req.url)?.pathname.groups.id;
-
-            if (roomId == null || !roomManager.doesRoomExist(roomId)) {
-                return generateResponse("./pages/404/html/404.html", 404, "text/html");
-            }
-
-            const { user, response } = createUser(req, connInfo, {
-                onJoin: () => roomManager.joinRoom(roomId, user),
-                onLeave: () => roomManager.leaveRoom(roomId, user)
-            });
-
-            return Promise.resolve(response);
-        }
-
         // No Content Found...
         return generateResponse("./pages/404/html/404.html", 404, "text/html");
 
     } else if (req.method === "POST") {
         // Create room + navigate to room page
         if (requestUrl.pathname === "/create-room") {
-            const roomId: string = roomManager.createRoom();
+            const roomId: string = await createRoomFetch({env: getProfile()});
             return Promise.resolve(new Response("Creating a room...", {
                 status: 303,
                 headers: {"content-type": "text/plain", "location": `/${roomId}`},
